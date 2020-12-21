@@ -47,6 +47,10 @@
 * [From a Googler: the Google interview process](https://www.reddit.com/r/cscareerquestions/comments/1z97rx/from_a_googler_the_google_interview_process)
 * [Máy trạng thái hữu hạn và thuật toán KMP](https://www.giaithuatlaptrinh.com/?p=687#comment-3359)
 * [My Most Embarrassing Mistakes as a Programmer (so far)](https://stackoverflow.blog/2019/10/29/my-most-embarrassing-mistakes-as-a-programmer-so-far)
+* [Machine learning courses of 2020 that are worth checking out.](https://twitter.com/omarsar0/status/1338824768057995265)  
+    * [Introduction to Machine Learning](https://sebastianraschka.com/resources/ml-lectures-1.html)
+    * [CMU Multilingual NLP 2020](https://www.youtube.com/playlist?list=PL8PYTP1V4I8CHhppU6n1Q9-04m96D9gt5)
+    * [Deep Learning for Computer Vision](https://www.youtube.com/playlist?list=PL5-TkQAfAZFbzxjBHtzdVCWE0Zbhomg7r)
 
 
 ## Entertaining
