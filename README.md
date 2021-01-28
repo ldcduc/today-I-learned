@@ -42,6 +42,10 @@
 * [vnhacker.blogspot.com](https://vnhacker.blogspot.com/)
 * [procul.org](https://procul.org/blog) - Blog Khoa Học Máy Tính
 
+### Tutorials
+
+* [How to Install ZSH Shell on Ubuntu 18.04 LTS](https://linuxhint.com/install_zsh_shell_ubuntu_1804/)
+
 ### Bookmarked
 
 * [From a Googler: the Google interview process](https://www.reddit.com/r/cscareerquestions/comments/1z97rx/from_a_googler_the_google_interview_process)
