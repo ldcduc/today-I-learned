@@ -191,6 +191,8 @@ echo "The script is now complete" exit 0
 
 > Run `sh try_var.sh foo bar baz`
 
+---
+
 ## Conditions
 
 ## Control Structures
@@ -222,13 +224,13 @@ read timeofday
 
 if [ $timeofday = "yes" ]
 then
-  echo "Good morning"
+    echo "Good morning"
 elif [ $timeofday = "no" ]; 
 then
-  echo "Good afternoon"
+    echo "Good afternoon"
 else
-  echo "Sorry, $timeofday not recognized. Enter yes or no"
-  exit 1
+    echo "Sorry, $timeofday not recognized. Enter yes or no"
+    exit 1
 fi
 
 exit 0
@@ -351,6 +353,8 @@ esac
 
 &rarr; **Not the best match** &rarr; **The first match**  
 
+---
+
 ## Lists
 
 Example code:  
@@ -441,12 +445,14 @@ Put multiple statements into `{ }` to make a statement block
 
 ```bash
 get_confirm && {
-    grep -v “$cdcatnum” $tracks_file > $temp_file
+    grep -v "$cdcatnum" $tracks_file > $temp_file
     cat $temp_file > $tracks_file 
     echo
     add_record_tracks
 }
 ```
+
+---
 
 ## Functions
 
@@ -526,39 +532,392 @@ echo $sample_text
 exit 0
 ```
 
+---
+
 ## Commands
 
 ### `break`
 
+* Escape from enclosing `for`, `while`, `until` loop
+* Add numeric parameter &rarr; the number of loops to break out &rarr; code will be hard to read (not recommended)
+
+```bash
+#!/bin/sh
+rm -rf fred* 
+echo > fred1 
+echo > fred2 
+mkdir fred3 
+echo > fred4
+for file in fred* 
+do
+    if [ -d "$file" ]; then 
+        break;
+    fi 
+done
+echo first directory starting fred was $file
+
+rm -rf fred* 
+exit 0
+```
+
+`break` with numeric parameter:  
+
+```bash
+for i in {1..3}; do
+    for j in {1..3}; do
+        if [[ $j -eq 2 ]]; then
+        break 2
+        fi
+        echo "j: $j"
+    done
+    echo "i: $i"
+done
+
+echo "All Done!"
+```
+
 ### The `:` command
+
+* a **null command** 
+    * alias for `true` (`:` is built-in &rarr; faster than `true`)
+* useful in conditional setting of variables
+    * `: ${var:=value}`
+
+Examples:  
+
+```bash
+#!/bin/sh
+
+rm -f fred
+if [ -f fred ]; then
+    :
+else 
+    echo file fred did not exist
+fi
+
+exit 0
+```
 
 ### `continue`
 
+Example:  
+
+```bash
+#!/bin/sh
+rm -rf fred*
+echo > fred1
+echo > fred2
+mkdir fred3
+echo > fred4
+
+for file in fred* 
+do
+    if [ -d “$file” ]; then
+            echo “skipping directory $file”
+        continue 
+    fi
+    echo file is $file 
+done
+
+rm -rf fred* 
+exit 0
+```
+
 ### The `.` command
+
+The dot (.) command executes the command in the current shell:  
+
+`. ./shell_script`  
+
+* Allow the executed script to change the current environment
+
+Try out `classic_set`:  
+
+`latest_set`:  
+
+```bash
+#!/bin/sh
+
+version=classic
+PATH=/usr/local/old_bin:/usr/bin:/bin:.
+PS1="classic> "
+```
+
+```bash
+#!/bin/sh
+
+version=latest
+PATH=/usr/local/new_bin:/usr/bin:/bin:.
+PS1=" latest version> "
+```
+
+Explain: The scripts are executed using the dot command &rarr; each script is executed in the current shell. This enables the script to **change environment settings** in the current shell, which **remains changed** even when the script finishes executing.
 
 ### `echo`
 
+How to suppress the new line characters:  
+
+* Common method: `echo -n "string to output"`  
+* Second option: `echo -e "string to output\c"`
+    * `\c`: supress new line character
+    * `\t`: outputting a tab
+    * `\n`: outputting carriage returns
+
 ### `eval`
+
+* Evaluate arguments
+
+```bash
+foo=10
+x=foo
+y='$'$x
+echo $y
+```
+
+&rarr; output `$foo`  
+
+```bash
+foo=10
+x=foo
+eval y='$'$x
+echo $y
+```
+
+&rarr; output `10`
+
+* `eval` is a bit like an extra `$`
+* useful &rarr; enabling code to be generated and run on-the-fly
 
 ### exec
 
+Two different uses:  
+
+* Replace current shell with different program:
+    * `exec wall "Thanks for all the fish"`
+* Modify current file descriptors:
+    * `exec 3< afile`
+
 ### `exit n`
+
+* Cause the script to exit with exit code `n`
+* Use at _command prompt_ or _interactive shell_ &rarr; log you out
+* No exit status &rarr; the status of the last command executed in the script is used as return value
+* **Good to practice to supply an exit code**  
+
+In shell script programming, exit code `0` = success, code `1` through `125` inclusive can be used by scripts.  
+The remaining values have reserved meanings:  
+
+| Exit code | Description |
+|---|---|
+| 126 | The file was not executable |
+| 127 | A command was not found |
+| 128 and above | A signal occurred |
+
+&rarr; Enable programmer to use 125 user-defined error codes without the need for a global error code variable
+
+Example:  
+
+```bash
+#!/bin/sh
+
+if [ -f .profile ]; then
+    exit 0
+fi
+
+exit 1
+```
+
+&rarr; hardcore style:  
+
+`[ -f .profile ] && exit 0 || exit 1`  
 
 ### `export`
 
+* Makes the variable named as its parameter available in subshells.
+    * By default, variables created in a shell are not available in further (sub)shells invoked from that shell. 
+    * The `export` command creates an environment variable from its parameter that can be seen by other scripts and pro- grams invoked from the current program.
+* More technically, the exported variables form the environment variables in any child processes derived from the shell. 
+    * This is best illustrated with an example of two scripts, export1 and export2.
+
+`export2`:  
+
+```bash
+#!/bin/sh
+
+echo "$foo"
+echo "$bar"
+```
+
+`export1`:  
+
+```bash
+#!/bin/sh
+
+foo="The first meta-syntactic variable"
+export bar="The second meta-syntactic variable"
+
+export2
+```
+
+Try `./export1` (run `sudo chmod +x export1 export2` before)  
+
+```
+$ ./export1
+
+The second meta-syntactic variable
+$
+```
+
+* The commands `set -a` or `set -allexport` will export all variables thereafter  
+
 ### `expr`
+
+Apply:  
+
+* ``x=`expr $x + 1` ``
+* ``x=$(expr $x + 1)``
+
+| Expression Evaluation | Description | 
+|---|---|
+| `expr1 | expr2` | expr1 if expr1 is nonzero, otherwise expr2 | 
+| `expr1 & expr2` | Zero if either expression is zero, otherwise expr1 | 
+| `expr1 = expr2` | Equal | 
+| `expr1 > expr2` | Greater than | 
+| `expr1 >= expr2` | Greater than or equal to | 
+| `expr1 < expr2` | Less than | 
+| `expr1 <= expr2` | Less than or equal to | 
+| `expr1 != expr2` | Not equal | 
+| `expr1 + expr2` | Addition | 
+| `expr1 - expr2` | Subtraction | 
+| `expr1 * expr2` | Multiplication | 
+| `expr1 / expr2` | Integer division | 
+| `expr1 % expr2` | Integer modulo | 
+
+* In newer scripts, the use of `expr` is normally replaced with the more efficient `$((...))` syntax, which is covered later in the chapter.
+
+&nbsp;  
 
 ### `printf`
 
+Syntax:  
+
+`printf "format string" parameter1 parameter2 ...`  
+
+* All characters in the format string other than `%` and `\` appear literally in the output
+* The following escape sequences are supported
+
+| Escape Sequence | Description |
+|---|---|
+| `\"` | Double quote
+| `\\` | Backslash character
+| `\a` | Alert (ring the bell or beep)
+| `\b` | Backspace character
+| `\c` | Suppress further output
+| `\f` | Form feed character
+| `\n` | Newline character
+| `\r` | Carriage return
+| `\t` | Tab character
+| `\v` | Vertical tab character
+| `\ooo` | The single character with octal value ooo
+| `\xHH` | The single character with the hexadecimal value HH
+
+The principal conversions are shown in the following table:  
+
+| Conversion Specifier | Description |
+|---|---|
+| `D` | Output a decimal number | 
+| `C` | Output a character | 
+| `S` | Output a string | 
+| `%` | Output the `%` character | 
+
+```bash
+$ printf "%s\n" hello
+hello
+$ printf "%s %d\t%s" "Hi there" 15 people
+Hi There 15    people
+```
+
+&rarr; must use `" "` to protect `Hi There` string and make it a single parameter  
+
+&nbsp;
+
 ### `return`
+
+* Causes functions to return
+* Takes a single numeric parameter
+    * No parameter specified &rarr; `return` defaults to the exit code of the last command
 
 ### `set`
 
+* Sets the parameter variables for the shell
+
+`set.sh`:  
+
+```bash
+#!/bin/sh
+
+echo the date is $(date)
+set $(date)
+echo The month is $3
+
+exit 0
+```
+
+Output:  
+
+```
+the date is Thu 04 Feb 2021 12:09:17 PM UTC
+The month is Feb
+```
+
+* This program sets the parameter list to the `date` command's output &rarr; can use positional parameter `$3` to get at the month
+* Control the way the shell executes by passing it parameters: `set -x` &rarr; make script display a trace of its currently executing command
+
 ### `shift`
+
+* Moves all the parameter variables down by one: `$2` becomes `$1`, `$3` becomes `$2`, and so on; the value of `$1` is **discarded**, `$0` **remains unchanged
+* &rarr; Useful for scanning through all parameters passed into a script
+
+`shift.sh`:  
+
+```bash
+#!/bin/sh
+
+while [ "$1" != "" ]; do
+    echo "$1"
+    shift
+done
+
+exit 0
+```
+
+Try `bash shift.sh`  
 
 ### `trap`
 
+> For those not familiar with signals, they are events sent asynchronously to a pro- gram. By default, they normally cause the program to terminate.
+
+`trap command signal`
+
 ### `unset`
+
+* The unset command removes variables or functions from the environment. 
+* It can’t do this to read-only variables defined by the shell itself, such as IFS.
+
+```bash
+#!/bin/sh
+
+foo="Hello World" 
+echo $foo
+
+unset foo 
+echo $foo
+```
+
+**=** vs. **unset**  
+
+* `foo=` &rarr; set `foo` to `null`, `foo` still exists
+* `unset foo`: remove the variable `foo` from the environment
 
 ### Two useful commands with Regex
 
@@ -566,12 +925,18 @@ exit 0
 
 #### The `grep` command
 
+---
+
 ## Command Execution
 
 ### Arithmetic Expansion
 
 ### Parameter Expansion
 
+---
+
 ## Here Documents
+
+---
 
 ## Debugging Script
