@@ -20,7 +20,7 @@
 
 ## YouTube Channels
 
-* [Tushar Roy - Coding Made Simple](https://www.youtube.com/channel/UCZLJf_R2sWyUtXSKiKlyvAw) - **System Design** By Tushar Roy <details close> - Learn System Design <br> - Learn how to express the ideas in English as simple as possible like his</details>
+* [Tushar Roy - Coding Made Simple](https://www.youtube.com/channel/UCZLJf_R2sWyUtXSKiKlyvAw) - **System Design** By Tushar Roy <details close> - Learn System Design <br> - Learn how to express the ideas in English as simple as possible like him</details>
 * [Gaurav Sen](https://www.youtube.com/c/GauravSensei) - **System Design** by Gaurav Sen
 * [Errichto](https://www.youtube.com/channel/UCBr_Fu6q9iHYQCh13jmpbrg) - **Errichto**
 * [Creel](https://www.youtube.com/c/WhatsACreel) - all about computer programming topics.
@@ -55,6 +55,7 @@
     * [Introduction to Machine Learning](https://sebastianraschka.com/resources/ml-lectures-1.html)
     * [CMU Multilingual NLP 2020](https://www.youtube.com/playlist?list=PL8PYTP1V4I8CHhppU6n1Q9-04m96D9gt5)
     * [Deep Learning for Computer Vision](https://www.youtube.com/playlist?list=PL5-TkQAfAZFbzxjBHtzdVCWE0Zbhomg7r)
+* Google Developer - [Introduction to Machine Learning](https://developers.google.com/machine-learning/crash-course/ml-intro)
 
 
 ## Entertaining
