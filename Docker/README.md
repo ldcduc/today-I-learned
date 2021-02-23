@@ -14,6 +14,9 @@ Some basic commands
 | `docker stats` <br> `docker stats --all` | Show realtime running containers (--all: all containers) |
 | `docker exec` | Execute a command in container | 
 
+* `docker ps -a`
+* `docker rm ID`
+
 ## MySql
 
 ### Pull `mysql` 
@@ -34,4 +37,6 @@ Some basic commands
 
 `docker exec -it ducle-mysql mysql -uroot -pmy-password`  
 
+## MongoDB
 
+docker run --name duc-mongo -p 27017:27017 -d mongo:latest
