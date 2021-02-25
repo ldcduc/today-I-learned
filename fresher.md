@@ -31,3 +31,15 @@
 | - React native | |
 | - Expo | |
 | - Typical react js code structures | |
+
+Some more backend topics:  
+
+* Algorithm
+* Data Structure
+* Scaling Distributed System
+* Caching Solution
+* Authentication in Microservices
+* Concurrency Pattern
+* Load Balancing
+* Service Discovery
+* gRPC
